@@ -1,3 +1,15 @@
+<?php
+    include '../koneksi.php';
+    // PAGINATION
+    $dataPerPage = 5;
+    $totalData = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM produk"));
+    $totalPage = ceil($totalData / $dataPerPage);
+    $currentPage = (isset($_GET["page"]))? $_GET["page"] : 1;
+
+    // totalPage = 2, firstData = 5
+    $firstData = ($currentPage - 1) * $dataPerPage;
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -132,8 +144,7 @@
                     </thead>
                     <tbody>
                         <?php
-                            include '../koneksi.php';
-                            $query = mysqli_query($conn, "SELECT * FROM produk");
+                            $query = mysqli_query($conn, "SELECT * FROM produk LIMIT $firstData, $dataPerPage");
                             while ($data=mysqli_fetch_array($query)){
                         ?>
                         <tr class="bg-gray-100 border-b hover:bg-gray-300 w-full">
@@ -156,7 +167,15 @@
                         ?>
                     </tbody> 
                 </table>
-                
+                <!-- Page Navigation -->
+
+                <?php for($i = 1; $i <= $totalPage; $i++) :?>
+                    <?php if($i == $currentPage) :?>
+                        <a href="?page=<?= $i; ?>" class="text-red-500"><?= $i; ?></a>
+                    <?php else:?>
+                        <a href="?page=<?= $i; ?>" class="text-red-500"><?= $i; ?></a>
+                    <?php endif;?>
+                <?php endfor; ?>
             </div>
         </div>
     </div>
@@ -172,6 +191,6 @@ if (isset($_POST['proses'])){
     $hargaproduk = $_POST['hargaproduk'];
     
     mysqli_query($conn, "INSERT INTO produk VALUES('$idproduk','$namaproduk','$hargaproduk')");
-    echo "<script type='text/javascript'>alert('Data Berhasil Ditambah'); window.location.href = 'produk.php';</confirm";
+    echo "<script>alert('Data Berhasil Ditambahkan'); window.location.replace('produk.php');</script>";
 }
 ?>
