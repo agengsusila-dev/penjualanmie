@@ -1,0 +1,12 @@
+<?php
+include('../koneksi.php');
+
+$id = $_GET['idproduk'];
+
+$query = mysqli_query($conn, "DELETE FROM produk WHERE idproduk='$id'");
+
+if ($query) {
+    echo "<script type='text/javascript'>alert('Data Berhasil Dihapus'); window.location.href = 'produk.php';</script>";
+} else {
+    echo "<script type='text/javascript'>alert('Data TIDAK Berhasil Dihapus'); window.location.href = 'produk.php';</script>";
+}
