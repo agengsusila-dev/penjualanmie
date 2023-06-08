@@ -42,7 +42,7 @@ $data = mysqli_fetch_array($query);
         <div class=" leading-7 text-left text-sm font-semibold mt-2 w-4/5 mx-auto inline-block" id="submenu">
             <h1 class="text-red-700 cursor-pointer p-2 hover:text-red-400 rounded-md mt-1"><a href="../produk/produk.php">Produk</a></h1>
             <h1 class="cursor-pointer p-2 hover:text-red-400 rounded-md mt-1"><a href="pos.php">POS</a></h1>
-            <h1 class="cursor-pointer p-2 hover:text-red-400 rounded-md mt-1"><a href="#">Order</a></h1>
+            <h1 class="cursor-pointer p-2 hover:text-red-400 rounded-md mt-1"><a href="../order/order.php">Order</a></h1>
         </div>
         <hr class="my-4 text-gray-600" />
             <div
