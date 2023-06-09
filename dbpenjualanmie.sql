@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: 127.0.0.1
--- Waktu pembuatan: 03 Jun 2023 pada 07.50
--- Versi server: 10.4.21-MariaDB
--- Versi PHP: 8.0.11
+-- Host: localhost
+-- Generation Time: Jun 09, 2023 at 06:36 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.1.17
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -26,24 +26,31 @@ USE `dbpenjualanmie`;
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `detailorder`
+-- Table structure for table `detailorder`
 --
 
 CREATE TABLE `detailorder` (
-  `rcpt#` varchar(12) DEFAULT NULL,
+  `rcpt` varchar(12) DEFAULT NULL,
   `idproduk` varchar(12) DEFAULT NULL,
   `qtyproduk` int(11) DEFAULT NULL,
   `hargatotal` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `detailorder`
+--
+
+INSERT INTO `detailorder` (`rcpt`, `idproduk`, `qtyproduk`, `hargatotal`) VALUES
+('DD2300001474', 'P002', 2, 98180);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `order`
+-- Table structure for table `order`
 --
 
 CREATE TABLE `order` (
-  `rcpt#` varchar(12) NOT NULL,
+  `rcpt` varchar(12) NOT NULL,
   `idstore` varchar(25) DEFAULT NULL,
   `ordertime` datetime DEFAULT NULL,
   `itemstotal` int(11) DEFAULT NULL,
@@ -51,28 +58,31 @@ CREATE TABLE `order` (
   `subtotal` int(11) DEFAULT NULL,
   `pajak` int(11) DEFAULT NULL,
   `total` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `order`
+-- Dumping data for table `order`
 --
 
-INSERT INTO `order` (`rcpt#`, `idstore`, `ordertime`, `itemstotal`, `promo`, `subtotal`, `pajak`, `total`) VALUES
-('DD2300001474', 'B01', '2023-03-01 15:56:24', 94544, 45454, 49090, 4909, 54000);
+INSERT INTO `order` (`rcpt`, `idstore`, `ordertime`, `itemstotal`, `promo`, `subtotal`, `pajak`, `total`) VALUES
+('', 'B03', '2023-04-12 12:00:00', 0, 0, 0, 0, 0),
+('asdasd12', 'B03', '2023-06-05 14:50:50', 2, 0, 0, 0, 0),
+('DD2300001474', 'B01', '2023-03-01 15:56:24', 94544, 45454, 49090, 4909, 54000),
+('tes', 'B02', '2023-01-21 12:01:00', 0, 0, 0, 0, 0);
 
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `pos`
+-- Table structure for table `pos`
 --
 
 CREATE TABLE `pos` (
   `idstore` varchar(12) NOT NULL,
   `postitle` varchar(25) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `pos`
+-- Dumping data for table `pos`
 --
 
 INSERT INTO `pos` (`idstore`, `postitle`) VALUES
@@ -83,67 +93,75 @@ INSERT INTO `pos` (`idstore`, `postitle`) VALUES
 -- --------------------------------------------------------
 
 --
--- Struktur dari tabel `produk`
+-- Table structure for table `produk`
 --
 
 CREATE TABLE `produk` (
   `idproduk` varchar(12) NOT NULL,
-  `namaproduk` varchar(25) DEFAULT NULL,
+  `namaproduk` varchar(50) DEFAULT NULL,
   `hargaproduk` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
--- Dumping data untuk tabel `produk`
+-- Dumping data for table `produk`
 --
 
 INSERT INTO `produk` (`idproduk`, `namaproduk`, `hargaproduk`) VALUES
 ('P001', 'Cheese Spicy Soup', 49090),
 ('P002', 'Cheese Spicy Saus', 49090),
-('P003', 'Extra Spicy Ayam Goreng L', 45454);
+('P003', 'Extra Spicy Ayam Goreng L', 45454),
+('P004', 'Extra Spicy Chicken Lamian', 49090),
+('P005', 'Extra Spicy Beef lamian', 49090),
+('P006', 'Lamian BBQ Combo', 47272),
+('P007', 'Lamian Rica Rica', 43636),
+('P008', 'Lamian Ayam Goreng', 34545),
+('P009', 'Lamian Pangsit', 42727),
+('P010', 'Lamian Honey BBQ Chicken', 45454),
+('P011', 'Lamian Sapi', 47272);
 
 --
 -- Indexes for dumped tables
 --
 
 --
--- Indeks untuk tabel `detailorder`
+-- Indexes for table `detailorder`
 --
 ALTER TABLE `detailorder`
-  ADD KEY `fk_detailorder_order_1` (`rcpt#`),
+  ADD KEY `fk_detailorder_order_1` (`rcpt`),
   ADD KEY `fk_detailorder_produk_1` (`idproduk`);
 
 --
--- Indeks untuk tabel `order`
+-- Indexes for table `order`
 --
 ALTER TABLE `order`
-  ADD PRIMARY KEY (`rcpt#`),
+  ADD PRIMARY KEY (`rcpt`),
   ADD KEY `fk_order_pos_1` (`idstore`);
 
 --
--- Indeks untuk tabel `pos`
+-- Indexes for table `pos`
 --
 ALTER TABLE `pos`
   ADD PRIMARY KEY (`idstore`);
 
 --
--- Indeks untuk tabel `produk`
+-- Indexes for table `produk`
 --
 ALTER TABLE `produk`
   ADD PRIMARY KEY (`idproduk`);
 
 --
--- Ketidakleluasaan untuk tabel pelimpahan (Dumped Tables)
+-- Constraints for dumped tables
 --
 
 --
--- Ketidakleluasaan untuk tabel `detailorder`
+-- Constraints for table `detailorder`
 --
 ALTER TABLE `detailorder`
-  ADD CONSTRAINT `fk_detailorder_order_1` FOREIGN KEY (`rcpt#`) REFERENCES `order` (`rcpt#`),
+  ADD CONSTRAINT `fk_detailorder_order_1` FOREIGN KEY (`rcpt`) REFERENCES `order` (`rcpt`),
   ADD CONSTRAINT `fk_detailorder_produk_1` FOREIGN KEY (`idproduk`) REFERENCES `produk` (`idproduk`);
 
 --
--- Ketidakleluasaan untuk tabel `order`
+-- Constraints for table `order`
 --
 ALTER TABLE `order`
   ADD CONSTRAINT `fk_order_pos_1` FOREIGN KEY (`idstore`) REFERENCES `pos` (`idstore`);
