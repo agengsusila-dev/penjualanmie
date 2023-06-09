@@ -104,7 +104,7 @@ while($data = mysqli_fetch_array($dataProduct)){
             </ul>
             </div>
             </div>
-    <!-- FORM CONTENT -->
+            <!-- FORM CONTENT -->
             <div class="flex flex-grow">
                 <div class="mt-5 ml-72 mx-auto sm:w-full sm:max-w-sm">
                     <form class="space-y-6" action="#" method="POST">
@@ -124,7 +124,7 @@ while($data = mysqli_fetch_array($dataProduct)){
                             <label
                                 for="text"
                                 class="block text-sm font-medium leading-6 text-gray-900"
-                                >ID Store</label>
+                                >Product ID</label>
                             <div class="mt-1">
                                 <select name="idproduk" required class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2">
                                     <?php echo $productsOption; ?>
@@ -190,15 +190,11 @@ if (isset($_POST['proses'])){
     include '../koneksi.php';
   
     $receipt = $_POST['rcpt'];
-    $idStore = $_POST['idstore'];
-    $orderTime = $_POST['ordertime'];
-    $itemsTotal = $_POST['itemstotal'];
-    $promo = $_POST['promo'];
-    $subTotal = $_POST['subtotal'];
-    $pajak = $_POST['pajak'];
-    $total = $_POST['total'];
+    $productId = $_POST['idproduk'];
+    $qtyProduct = $_POST['qtyproduk'];
+    $totalPrice = $_POST['hargatotal'];
     
-    mysqli_query($conn, "INSERT INTO `order` VALUES('$receipt','$idStore', '$orderTime', '$itemsTotal', '$promo', '$subTotal','$pajak', '$total')");
-    echo "<script type='text/javascript'>alert('Data Berhasil Ditambah'); window.location.href = 'order.php';</script>";
+    mysqli_query($conn, "INSERT INTO `detailorder` VALUES('$receipt','$productId', '$qtyProduct', '$totalPrice')");
+    echo "<script type='text/javascript'>alert('Data Berhasil Ditambah'); window.location.href = 'order-detail.php';</script>";
 }
 ?>
