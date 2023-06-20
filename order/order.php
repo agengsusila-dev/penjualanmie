@@ -102,7 +102,7 @@
             </div>
             <!-- FORM CONTENT -->
             <div class="flex flex-grow">
-                <div class="mt-5 ml-72 mx-auto w-auto">
+                <div class="mt-5 ml-72 mr-10 mx-auto w-auto">
                     <div class="flex">
                             <a 
                                 href="order-tambah.php"
@@ -122,7 +122,7 @@
                                     Receipt
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    ID Store
+                                    Pos Title
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Order Time
@@ -150,7 +150,7 @@
                         <tbody>
                             <?php
                                 include '../koneksi.php';
-                                $query = mysqli_query($conn, "SELECT * FROM `order`");
+                                $query = mysqli_query($conn, "SELECT o.*, s.postitle FROM `order` o JOIN pos s ON o.idstore = s.idstore");
                                 while ($data=mysqli_fetch_array($query)){
                             ?>
                             <tr class="bg-gray-100 border-b hover:bg-gray-300 w-full">
@@ -158,7 +158,7 @@
                                     <?php echo $data['rcpt'];?>
                                 </th>
                                 <td class="px-6 py-4">
-                                    <?php echo $data['idstore'];?>
+                                    <?php echo $data['postitle'];?>
                                 </td>
                                 <td class="px-6 py-4">
                                     <?php echo $data['ordertime'];?>
