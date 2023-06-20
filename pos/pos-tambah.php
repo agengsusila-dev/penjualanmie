@@ -84,7 +84,7 @@
             </ul>
             </div>
             </div>
-    <!-- FORM CONTENT -->
+            <!-- FORM CONTENT -->
             <div class="flex flex-grow">
                 <div class="mt-5 ml-72 mx-auto sm:w-full sm:max-w-sm">
                     <form class="space-y-6" action="#" method="POST">
