@@ -79,11 +79,6 @@
                     <span class="ml-2 text-sm tracking-wide truncate">Order</span>
                 </a>
                 </li>
-                <li>
-                <a href="../order/order-detail.php" class="pl-12 relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-red-500 pr-6">
-                    <span class="ml-2 text-sm tracking-wide truncate">Detail Order</span>
-                </a>
-                </li>
                 
                 <li class="px-5">
                 <div class="flex flex-row items-center h-8">
@@ -201,7 +196,7 @@
                                 </td>
                                 <td class="px-6 py-4">
                                     <a href="produk-ubah.php?idstore=<?php echo $data['idstore'];?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                    <a href="produk-ubah.php?idstore=<?php echo $data['idstore'];?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
+                                    <a href="produk-ubah.php?idstore=<?php echo $data['idstore'];?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="return confirm('Konfirmasi hapus data')">Delete</a>
                                 </td>
                             </tr>
                             <?php 

@@ -74,11 +74,6 @@ while($data = mysqli_fetch_array($dataPos)){
                     <span class="ml-2 text-sm tracking-wide truncate">Order</span>
                 </a>
                 </li>
-                <li>
-                <a href="../order/order-detail.php" class="pl-12 relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-red-500 pr-6">
-                    <span class="ml-2 text-sm tracking-wide truncate">Detail Order</span>
-                </a>
-                </li>
                 
                 <li class="px-5">
                 <div class="flex flex-row items-center h-8">
@@ -130,6 +125,22 @@ while($data = mysqli_fetch_array($dataPos)){
                             <label
                                 for="text"
                                 class="block text-sm font-medium leading-6 text-gray-900"
+                                >Total Person</label
+                            >
+                            <div class="mt-1">
+                                <input
+                                    id="username"
+                                    name="pax"
+                                    type="number"
+                                    required
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                for="text"
+                                class="block text-sm font-medium leading-6 text-gray-900"
                                 >Order Time</label
                             >
                             <div class="mt-1">
@@ -168,22 +179,6 @@ while($data = mysqli_fetch_array($dataPos)){
                                 <input
                                     id="username"
                                     name="promo"
-                                    type="text"
-                                    required
-                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <label
-                                for="text"
-                                class="block text-sm font-medium leading-6 text-gray-900"
-                                >Sub Total</label
-                            >
-                            <div class="mt-1">
-                                <input
-                                    id="username"
-                                    name="subtotal"
                                     type="text"
                                     required
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
@@ -246,19 +241,26 @@ while($data = mysqli_fetch_array($dataPos)){
 </body>
 </html>
 <?php 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 if (isset($_POST['proses'])){
     include '../koneksi.php';
   
     $receipt = $_POST['rcpt'];
     $idStore = $_POST['idstore'];
+    $pax = $_POST['pax'];
     $orderTime = $_POST['ordertime'];
     $itemsTotal = $_POST['itemstotal'];
     $promo = $_POST['promo'];
-    $subTotal = $_POST['subtotal'];
     $pajak = $_POST['pajak'];
-    $total = $_POST['total'];
+    $total = $itemsTotal - $promo + $pajak;
+
     
-    mysqli_query($conn, "INSERT INTO `order` VALUES('$receipt','$idStore', '$orderTime', '$itemsTotal', '$promo', '$subTotal','$pajak', '$total')");
-    echo "<script type='text/javascript'>alert('Data Berhasil Ditambah'); window.location.href = 'order.php';</script>";
+    $query = "INSERT INTO `order` VALUES('$receipt','$idStore', '$pax', '$orderTime', '$itemsTotal', '$promo','$pajak', '$total')";
+    if(mysqli_query($conn, $query)) {
+        echo "<script type='text/javascript'>alert('Data Berhasil Ditambah'); window.location.href = 'order.php';</script>";
+    } else {
+        echo "Error: " . $query . "<br>" . mysqli_error($conn);
+    }
 }
 ?>

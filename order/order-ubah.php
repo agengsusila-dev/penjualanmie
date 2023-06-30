@@ -1,15 +1,29 @@
+<?php
+include '../koneksi.php';
+$query = mysqli_query($conn, "SELECT * FROM `order` where rcpt = '$_GET[rcpt]'");
+$data = mysqli_fetch_array($query);
+$dataPos = mysqli_query($conn, "SELECT idstore, postitle from pos");
+while($arrayDataPos = mysqli_fetch_array($dataPos)){
+  $idStore = $arrayDataPos['idstore'];
+  $posTitle = $arrayDataPos['postitle'];
+  $posOptions .= "<option value='$idStore'>$posTitle</option>";
+}
+?>
+
+
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Edit Order</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <title>Pos</title>
 </head>
+
 <body>
-    <!-- SIDEBAR COMPONENT -->
-    <div class="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-gray-50 text-gray-800">
+<div class="min-h-screen flex flex-col flex-auto flex-shrink-0 antialiased bg-gray-50 text-gray-800">
         <div class="flex">
             <div class="fixed flex flex-col top-0 left-0 w-64 bg-white h-full border-r">
             <div class="flex p-4 h-auto border-b">
@@ -79,37 +93,117 @@
             </ul>
             </div>
             </div>
-            <!-- FORM CONTENT -->
+    <!-- FORM CONTENT -->
             <div class="flex flex-grow">
                 <div class="mt-5 ml-72 mx-auto sm:w-full sm:max-w-sm">
                     <form class="space-y-6" action="#" method="POST">
-                        <div>
+                      <div>
                             <label
                                 for="text"
                                 class="block text-sm font-medium leading-6 text-gray-900"
-                                >ID Store</label
+                                >Receipt</label
                             >
                             <div class="mt-1">
                                 <input
-                                    name="idstore"
+                                    name="rcpt"
                                     type="text"
+                                    value="<?php echo $data['rcpt'];?>"
                                     required
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
                                 />
                             </div>
                         </div>
-                        
                         <div>
                             <label
                                 for="text"
                                 class="block text-sm font-medium leading-6 text-gray-900"
-                                >POS Title</label
+                                >POS Location</label>
+                            <div class="mt-1">
+                                <select name="idstore" required class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2">
+                                 <?php echo $posOptions; ?>
+                                </select> 
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                for="text"
+                                class="block text-sm font-medium leading-6 text-gray-900"
+                                >Order Time</label
                             >
                             <div class="mt-1">
                                 <input
                                     id="username"
-                                    name="postitle"
+                                    name="ordertime"
+                                    type="datetime-local"
+                                    value="<?php echo $data['ordertime'];?>"
+                                    required
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                for="text"
+                                class="block text-sm font-medium leading-6 text-gray-900"
+                                >Total Person</label
+                            >
+                            <div class="mt-1">
+                                <input
+                                    id="username"
+                                    name="pax"
                                     type="text"
+                                    value="<?php echo $data['pax'];?>"
+                                    required
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                for="text"
+                                class="block text-sm font-medium leading-6 text-gray-900"
+                                >Items Total</label
+                            >
+                            <div class="mt-1">
+                                <input
+                                    id="username"
+                                    name="itemstotal"
+                                    type="text"
+                                    value="<?php echo $data['itemstotal'];?>"
+                                    required
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                for="text"
+                                class="block text-sm font-medium leading-6 text-gray-900"
+                                >Discount</label
+                            >
+                            <div class="mt-1">
+                                <input
+                                    id="username"
+                                    name="promo"
+                                    type="text"
+                                    value="<?php echo $data['promo'];?>"
+                                    required
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
+                                />
+                            </div>
+                        </div>
+                        <div>
+                            <label
+                                for="text"
+                                class="block text-sm font-medium leading-6 text-gray-900"
+                                >Tax</label
+                            >
+                            <div class="mt-1">
+                                <input
+                                    id="username"
+                                    name="pajak"
+                                    type="text"
+                                    value="<?php echo $data['pajak'];?>"
                                     required
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
                                 />
@@ -123,7 +217,7 @@
                             >
                                 Submit
                             </button>
-                            <a href="pos.php">
+                            <a href="order.php">
                                 <input 
                                 type="button" 
                                 class="flex w-40 justify-center rounded-md bg-slate-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
@@ -136,15 +230,22 @@
         </div>
     </div>
 </body>
+
 </html>
-<?php 
+<?php
+
 if (isset($_POST['proses'])){
     include '../koneksi.php';
-  
+    $rcpt = $_POST['rcpt'];
     $idstore = $_POST['idstore'];
-    $postitle = $_POST['postitle'];
-    
-    mysqli_query($conn, "INSERT INTO pos VALUES('$idstore','$postitle')");
-    echo "<script type='text/javascript'>alert('Data Berhasil Ditambah'); window.location.href = 'pos.php';</script>";
+    $ordertime = $_POST['ordertime'];
+    $itemstotal = $_POST['itemstotal'];
+    $promo = $_POST['promo'];
+    $pax = $_POST['pax'];
+    $pajak = $_POST['pajak'];
+    $total = $itemstotal - $promo + $pajak;
+
+    mysqli_query($conn, "UPDATE `order` SET idstore='$idstore', ordertime='$ordertime', pax='$pax', itemstotal='$itemstotal', promo='$promo', pajak='$pajak', total='$total'  WHERE rcpt='$rcpt'");
+    echo "<script type='text/javascript'>alert('Data Berhasil Diedit'); window.location.href = 'order.php';</script>";
 }
 ?>

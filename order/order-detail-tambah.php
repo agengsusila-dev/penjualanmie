@@ -2,18 +2,15 @@
 include('../koneksi.php');
 // GET ORDER DATA
 $dataOrder = mysqli_query($conn, "SELECT rcpt FROM `order`");
-$rcptsOption = "<option value=''> Receipts List </option>";
-while($data = mysqli_fetch_array($dataOrder)){
-    $rcpt = $data['rcpt'];
-    $rcptsOption .= "<option value='$rcpt'>$rcpt</option>";
-}
+$dataOrderArray = mysqli_fetch_array($dataOrder);
 
 // GET PRODUCT DATA
-$dataProduct = mysqli_query($conn, "SELECT idproduk, namaproduk FROM produk");
+$dataProduct = mysqli_query($conn, "SELECT * FROM produk");
 $productsOption = "<option value=''> Products List </option>";
 while($data = mysqli_fetch_array($dataProduct)){
     $productId = $data['idproduk'];
     $productName = $data['namaproduk'];
+    $productPrice = $data['hargaproduk'];
     $productsOption .= "<option value='$productId'>$productName</option>";
 }
 ?>
@@ -82,11 +79,6 @@ while($data = mysqli_fetch_array($dataProduct)){
                     <span class="ml-2 text-sm tracking-wide truncate">Order</span>
                 </a>
                 </li>
-                <li>
-                <a href="../order/order-detail.php" class="pl-12 relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-red-500 pr-6">
-                    <span class="ml-2 text-sm tracking-wide truncate">Detail Order</span>
-                </a>
-                </li>
                 
                 <li class="px-5">
                 <div class="flex flex-row items-center h-8">
@@ -115,9 +107,15 @@ while($data = mysqli_fetch_array($dataProduct)){
                                 >Receipt</label
                             >
                             <div class="mt-1">
-                                <select name="rcpt" required class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2">
-                                    <?php echo $rcptsOption; ?>
-                                </select> 
+                            <input
+                                    id="username"
+                                    name="qtyproduk"
+                                    type="text"
+                                    value="<?php echo $dataOrderArray['rcpt'] ?>"
+                                    required
+                                    readonly
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
+                                /> 
                             </div>
                         </div>
                         <div>
@@ -141,21 +139,6 @@ while($data = mysqli_fetch_array($dataProduct)){
                                 <input
                                     id="username"
                                     name="qtyproduk"
-                                    type="text"
-                                    required
-                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
-                                />
-                            </div>
-                        </div>
-                        <div>
-                            <label
-                                for="text"
-                                class="block text-sm font-medium leading-6 text-gray-900"
-                                >Total Price</label
-                            >
-                            <div class="mt-1">
-                                <input
-                                    name="hargatotal"
                                     type="text"
                                     required
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
@@ -192,9 +175,8 @@ if (isset($_POST['proses'])){
     $receipt = $_POST['rcpt'];
     $productId = $_POST['idproduk'];
     $qtyProduct = $_POST['qtyproduk'];
-    $totalPrice = $_POST['hargatotal'];
     
-    mysqli_query($conn, "INSERT INTO `detailorder` VALUES('$receipt','$productId', '$qtyProduct', '$totalPrice')");
+    mysqli_query($conn, "INSERT INTO detailorder VALUES('$receipt','$productId', '$qtyProduct')");
     echo "<script type='text/javascript'>alert('Data Berhasil Ditambah'); window.location.href = 'order-detail.php';</script>";
 }
 ?>

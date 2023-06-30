@@ -1,17 +1,17 @@
 <?php
-    include '../koneksi.php';
-    // PAGINATION
-    $dataPerPage = 10;
-    $totalData = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `order`"));
-    $totalPage = ceil($totalData / $dataPerPage);
-    $currentPage = (isset($_GET["page"]))? $_GET["page"] : 1;
+include '../koneksi.php';
+// PAGINATION
+$dataPerPage = 10;
+$totalData = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM `order`"));
+$totalPage = ceil($totalData / $dataPerPage);
+$currentPage = (isset($_GET["page"]))? $_GET["page"] : 1;
 
-    // totalPage = 2, firstData = 5
-    $firstData = ($currentPage - 1) * $dataPerPage;
+// totalPage = 2, firstData = 5
+$firstData = ($currentPage - 1) * $dataPerPage;
 
-    // FOR SHOWING OF RESULT
-    $lastPageItemCount = $totalData % $dataPerPage;
-    $lastPageEnd = $offset + $lastPageItemCount;
+// FOR SHOWING OF RESULT
+$lastPageItemCount = $totalData % $dataPerPage;
+$lastPageEnd = $offset + $lastPageItemCount;
 ?>
 
 <!DOCTYPE html>
@@ -78,11 +78,6 @@
                     <span class="ml-2 text-sm tracking-wide truncate">Order</span>
                 </a>
                 </li>
-                <li>
-                <a href="../order/order-detail.php" class="pl-12 relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-red-500 pr-6">
-                    <span class="ml-2 text-sm tracking-wide truncate">Detail Order</span>
-                </a>
-                </li>
                 
                 <li class="px-5">
                 <div class="flex flex-row items-center h-8">
@@ -128,13 +123,13 @@
                                     Order Time
                                 </th>
                                 <th scope="col" class="px-6 py-3">
+                                    Total Person
+                                </th>
+                                <th scope="col" class="px-6 py-3">
                                     Items Total
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Discount
-                                </th>
-                                <th scope="col" class="px-6 py-3">
-                                    Sub Total
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Tax
@@ -164,13 +159,13 @@
                                     <?php echo $data['ordertime'];?>
                                 </td>
                                 <td class="px-6 py-4">
+                                    <?php echo $data['pax'];?>
+                                </td>
+                                <td class="px-6 py-4">
                                     <?php echo $data['itemstotal'];?>
                                 </td>
                                 <td class="px-6 py-4">
                                     <?php echo $data['promo'];?>
-                                </td>
-                                <td class="px-6 py-4">
-                                    <?php echo $data['subtotal'];?>
                                 </td>
                                 <td class="px-6 py-4">
                                     <?php echo $data['pajak'];?>
@@ -179,8 +174,15 @@
                                     <?php echo $data['total'];?>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="#.php?idstore=<?php echo $data['rcpt#'];?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
-                                    <a href="#.php?idstore=<?php echo $data['rcpt#'];?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
+                                    <div>
+                                        <a href="order-ubah.php?rcpt=<?php echo $data['rcpt'];?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                    </div>
+                                    <div>
+                                        <a href="order-hapus.php?rcpt=<?php echo $data['rcpt'];?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="return confirm('Konfirmasi hapus data')">Delete</a>
+                                    </div>
+                                    <div>
+                                        <a href="order-detail.php?rcpt=<?php echo $data['rcpt'];?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">View Details</a>
+                                    </div>
                                 </td>
                             </tr>
                             <?php 

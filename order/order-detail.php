@@ -1,17 +1,26 @@
 <?php
-    include '../koneksi.php';
-    // PAGINATION
-    $dataPerPage = 10;
-    $totalData = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM detailorder"));
-    $totalPage = ceil($totalData / $dataPerPage);
-    $currentPage = (isset($_GET["page"]))? $_GET["page"] : 1;
+include '../koneksi.php';
+$getRcpt = $_GET['rcpt'];
+$query = mysqli_query($conn, "SELECT o.*, s.postitle FROM `order` o JOIN pos s ON o.idstore = s.idstore WHERE rcpt = '$getRcpt'");
+$data = mysqli_fetch_array($query);
+$dataPos = mysqli_query($conn, "SELECT idstore, postitle from pos");
+while($arrayDataPos = mysqli_fetch_array($dataPos)){
+  $idStore = $arrayDataPos['idstore'];
+  $posTitle = $arrayDataPos['postitle'];
+  $posOptions .= "<option value='$idStore'>$posTitle</option>";
+}
+// PAGINATION
+$dataPerPage = 10;
+$totalData = mysqli_num_rows(mysqli_query($conn, "SELECT * FROM detailorder"));
+$totalPage = ceil($totalData / $dataPerPage);
+$currentPage = (isset($_GET["page"]))? $_GET["page"] : 1;
 
-    // totalPage = 2, firstData = 5
-    $firstData = ($currentPage - 1) * $dataPerPage;
+// totalPage = 2, firstData = 5
+$firstData = ($currentPage - 1) * $dataPerPage;
 
-    // FOR SHOWING OF RESULT
-    $lastPageItemCount = $totalData % $dataPerPage;
-    $lastPageEnd = $offset + $lastPageItemCount;
+// FOR SHOWING OF RESULT
+$lastPageItemCount = $totalData % $dataPerPage;
+$lastPageEnd = $offset + $lastPageItemCount;
 ?>
 
 <!DOCTYPE html>
@@ -78,11 +87,6 @@
                     <span class="ml-2 text-sm tracking-wide truncate">Order</span>
                 </a>
                 </li>
-                <li>
-                <a href="../order/order-detail.php" class="pl-12 relative flex flex-row items-center h-11 focus:outline-none hover:bg-gray-50 text-gray-600 hover:text-gray-800 border-l-4 border-transparent hover:border-red-500 pr-6">
-                    <span class="ml-2 text-sm tracking-wide truncate">Detail Order</span>
-                </a>
-                </li>
                 
                 <li class="px-5">
                 <div class="flex flex-row items-center h-8">
@@ -103,9 +107,76 @@
     <!-- FORM CONTENT -->
             <div class="flex flex-grow">
                 <div class="mt-5 ml-72 mx-auto w-auto">
+                    <table class="w-full text-sm text-left text-gray-500 mb-4">
+                        <!-- Konten tabel di sini -->
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-xs text-red-700 bg-gray-200">
+                                    Receipt
+                                </th>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-100 border-bw-full">
+                                    <?php echo $data['rcpt'];?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-xs text-red-700 bg-gray-200">
+                                    POS Location
+                                </th>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-100 border-bw-full">
+                                    <?php echo $data['postitle'];?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-xs text-red-700 bg-gray-200">
+                                    Pax
+                                </th>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-100 border-bw-full">
+                                    <?php echo $data['pax'];?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-xs text-red-700 bg-gray-200">
+                                    Order Time
+                                </th>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-100 border-bw-full">
+                                    <?php echo $data['ordertime'];?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-xs text-red-700 bg-gray-200">
+                                    Items Total
+                                </th>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-100 border-bw-full">
+                                    <?php echo $data['itemstotal'];?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-xs text-red-700 bg-gray-200">
+                                    Discount
+                                </th>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-100 border-bw-full">
+                                    <?php echo $data['promo'];?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-xs text-red-700 bg-gray-200">
+                                    Tax
+                                </th>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-100 border-bw-full">
+                                    <?php echo $data['pajak'];?>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="col" class="px-6 py-3 text-xs text-red-700 bg-gray-200">
+                                    Total
+                                </th>
+                                <td class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap bg-gray-100 border-bw-full">
+                                    <?php echo $data['total'];?>
+                                </td>
+                            </tr>
+                    </table>
                     <div class="flex">
                             <a 
-                                href="order-detail-tambah.php"
+                                href="order-detail-tambah.php?rcpt=<?php echo $data['rcpt'];?>"
                                 type="submit"
                                 name="proses"
 
@@ -119,10 +190,10 @@
                             <thead class="text-xs text-red-700 bg-gray-200">
                             <tr>
                                 <th scope="col" class="px-6 py-3">
-                                    Receipt
+                                    Product Name
                                 </th>
                                 <th scope="col" class="px-6 py-3">
-                                    Product ID
+                                    Product Price
                                 </th>
                                 <th scope="col" class="px-6 py-3">
                                     Quantity
@@ -137,25 +208,28 @@
                         </thead>
                         <tbody>
                             <?php
-                                include '../koneksi.php';
-                                $query = mysqli_query($conn, "SELECT * FROM `detailorder`");
-                                while ($data=mysqli_fetch_array($query)){
+                                $query = "SELECT d.*, p.namaproduk, p.hargaproduk FROM `detailorder` d 
+                                INNER JOIN produk p ON d.idproduk = p.idproduk
+                                WHERE rcpt = '$getRcpt'";
+                                $queryDetail = mysqli_query($conn, $query);
+                                while ($data=mysqli_fetch_assoc($queryDetail)){
                             ?>
                             <tr class="bg-gray-100 border-b hover:bg-gray-300 w-full">
-                                <th scope="row" class="px-6 py-4 font-medium text-gray-900 whitespace-nowrap">
-                                    <?php echo $data['rcpt'];?>
-                                </th>
+                            
                                 <td class="px-6 py-4">
-                                    <?php echo $data['idproduk'];?>
+                                    <?php echo $data['namaproduk'];?>
+                                </td>
+                                <td class="px-6 py-4">
+                                    <?php echo $data['hargaproduk'];?>
                                 </td>
                                 <td class="px-6 py-4">
                                     <?php echo $data['qtyproduk'];?>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <?php echo $data['hargatotal'];?>
+                                    <?php echo $data['subtotal'];?>
                                 </td>
                                 <td class="px-6 py-4">
-                                    <a href="#.php?idstore=<?php echo $data['rcpt#'];?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Edit</a>
+                                    
                                     <a href="#.php?idstore=<?php echo $data['rcpt#'];?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
                                 </td>
                             </tr>
