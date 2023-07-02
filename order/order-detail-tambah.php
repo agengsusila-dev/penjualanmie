@@ -1,8 +1,8 @@
 <?php
 include('../koneksi.php');
-// GET ORDER DATA
-$dataOrder = mysqli_query($conn, "SELECT rcpt FROM `order`");
-$dataOrderArray = mysqli_fetch_array($dataOrder);
+
+// GET RCPT FORM ORDER DATA
+$rcpt = $_GET['rcpt'];
 
 // GET PRODUCT DATA
 $dataProduct = mysqli_query($conn, "SELECT * FROM produk");
@@ -95,8 +95,8 @@ while($data = mysqli_fetch_array($dataProduct)){
                 </li>
             </ul>
             </div>
-            </div>
-            <!-- FORM CONTENT -->
+        </div>
+        <!-- FORM CONTENT -->
             <div class="flex flex-grow">
                 <div class="mt-5 ml-72 mx-auto sm:w-full sm:max-w-sm">
                     <form class="space-y-6" action="#" method="POST">
@@ -109,9 +109,9 @@ while($data = mysqli_fetch_array($dataProduct)){
                             <div class="mt-1">
                             <input
                                     id="username"
-                                    name="qtyproduk"
+                                    name="rcpt"
                                     type="text"
-                                    value="<?php echo $dataOrderArray['rcpt'] ?>"
+                                    value="<?php echo $rcpt ?>"
                                     required
                                     readonly
                                     class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
@@ -124,7 +124,7 @@ while($data = mysqli_fetch_array($dataProduct)){
                                 class="block text-sm font-medium leading-6 text-gray-900"
                                 >Product ID</label>
                             <div class="mt-1">
-                                <select name="idproduk" required class="block w-full rounded-md border-0 p-2 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2">
+                                <select name="idproduk" required class="block w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2">
                                     <?php echo $productsOption; ?>
                                 </select> 
                             </div>
@@ -145,6 +145,23 @@ while($data = mysqli_fetch_array($dataProduct)){
                                 />
                             </div>
                         </div>
+
+                        <!-- <div>
+                            <label
+                                for="text"
+                                class="block text-sm font-medium leading-6 text-gray-900"
+                                >Sub Total</label
+                            >
+                            <div class="mt-1">
+                                <input
+                                    id="username"
+                                    name="subtotal"
+                                    type="text"
+                                    required
+                                    class="block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-slate-400 sm:text-sm sm:leading-6 p-2"
+                                />
+                            </div>
+                        </div> -->
                         <div class="flex mt-4">
                             <button
                                 type="submit"
@@ -153,7 +170,7 @@ while($data = mysqli_fetch_array($dataProduct)){
                             >
                                 Submit
                             </button>
-                            <a href="order-detail.php">
+                            <a href="order.php">
                                 <input 
                                 type="button" 
                                 class="flex w-40 justify-center rounded-md bg-slate-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-slate-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
@@ -170,13 +187,26 @@ while($data = mysqli_fetch_array($dataProduct)){
 </html>
 <?php 
 if (isset($_POST['proses'])){
-    include '../koneksi.php';
   
     $receipt = $_POST['rcpt'];
     $productId = $_POST['idproduk'];
     $qtyProduct = $_POST['qtyproduk'];
-    
-    mysqli_query($conn, "INSERT INTO detailorder VALUES('$receipt','$productId', '$qtyProduct')");
-    echo "<script type='text/javascript'>alert('Data Berhasil Ditambah'); window.location.href = 'order-detail.php';</script>";
+
+    $queryPrice = "SELECT hargaproduk FROM produk WHERE idproduk = '$productId'";
+    $result = mysqli_query($conn, $queryPrice);
+    $row = mysqli_fetch_assoc($result);
+    $priceProduct = $row['hargaproduk'];
+
+    // CALCULATE SUBTOTAL
+    $subtotal = $priceProduct * $qtyProduct;
+     
+    $queryInsert = "INSERT INTO detailorder (rcpt, idproduk, qtyproduk, subtotal)
+    VALUES ('$receipt', '$productId', '$qtyProduct', '$subtotal')";
+    if (mysqli_query($conn, $queryInsert)) {
+        echo "<script type='text/javascript'>alert('Data Berhasil Ditambah'); window.location.href = 'order.php';</script>";
+    } else {
+        $error = mysqli_error($conn);
+        echo "<script type='text/javascript'>alert('Data Gagal Ditambah: " . $error . "'); window.location.href = 'order.php';</script>";
+    }
 }
 ?>

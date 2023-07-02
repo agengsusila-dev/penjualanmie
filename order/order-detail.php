@@ -1,6 +1,7 @@
 <?php
 include '../koneksi.php';
 $getRcpt = $_GET['rcpt'];
+$idproduk = $_GET['idproduk'];
 $query = mysqli_query($conn, "SELECT o.*, s.postitle FROM `order` o JOIN pos s ON o.idstore = s.idstore WHERE rcpt = '$getRcpt'");
 $data = mysqli_fetch_array($query);
 $dataPos = mysqli_query($conn, "SELECT idstore, postitle from pos");
@@ -178,11 +179,23 @@ $lastPageEnd = $offset + $lastPageItemCount;
                             <a 
                                 href="order-detail-tambah.php?rcpt=<?php echo $data['rcpt'];?>"
                                 type="submit"
-                                name="proses"
-
-                                class="flex w-fit justify-center rounded-md bg-red-600 px-3 py-1.5 mb-5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+                                class="flex w-auto justify-center rounded-md bg-red-600 px-3 py-1.5 mb-5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
                             >
                                 Add Order Details
+                            </a>
+                            <a 
+                                href="order-detail.php?update=true&rcpt=<?php echo $data['rcpt'];?>"
+                                type="submit"
+                                class="flex w-auto justify-center rounded-md bg-red-600 px-3 py-1.5 mb-5 ml-4 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+                            >
+                                Confirm Details
+                            </a>
+                            <a 
+                                href="order-cetak.php?rcpt=<?php echo $data['rcpt'];?>"
+                                type="submit"
+                                class="flex w-auto justify-center rounded-md bg-red-600 px-3 py-1.5 mb-5 ml-4 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-red-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-slate-400"
+                            >
+                                Print Order
                             </a>
                     </div>
                     <table class="w-full text-sm text-left text-gray-500">
@@ -229,8 +242,7 @@ $lastPageEnd = $offset + $lastPageItemCount;
                                     <?php echo $data['subtotal'];?>
                                 </td>
                                 <td class="px-6 py-4">
-                                    
-                                    <a href="#.php?idstore=<?php echo $data['rcpt#'];?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline">Delete</a>
+                                    <a href="order-detail-hapus.php?rcpt=<?php echo $data['rcpt']; ?>&idproduk=<?php echo $data['idproduk']; ?>" class="font-medium text-blue-600 dark:text-blue-500 hover:underline" onclick="return confirm('Konfirmasi hapus data')">Delete</a>
                                 </td>
                             </tr>
                             <?php 
@@ -302,3 +314,18 @@ $lastPageEnd = $offset + $lastPageItemCount;
     </div>
 </body>
 </html>
+<?php 
+if (isset($_GET['update']) && $_GET['update'] === 'true') {
+    $updateQuery = "UPDATE `order` o
+                    JOIN (SELECT rcpt, SUM(subtotal) AS subtotal FROM detailorder) d
+                    SET o.itemstotal = d.subtotal, o.total = o.itemstotal - o.promo + o.pajak
+                    WHERE o.rcpt = '$getRcpt'";
+
+    if (mysqli_query($conn, $updateQuery)) {
+        echo "<script type='text/javascript'>alert('Data Berhasil Diperbarui'); window.location.href = 'order.php';</script>";
+    } else {
+        $error = mysqli_error($conn);
+        echo "<script type='text/javascript'>alert('Data Gagal Ditambah: " . $error . "'); window.location.href = 'order.php';</script>";
+    }
+}
+?>
